@@ -1,5 +1,5 @@
 <template>
-  <a class="m-tabbar-item" :class="{'is-active':isActive}" @click="$parent.$emit('input',id)">
+  <a class="m-tabbar-item" :class="{'is-active':isActive}" @click="goToRouter">
     <span class="m-tabbar-item-icon" v-show="!isActive"><slot name="icon-normal"></slot></span>
     <span class="m-tabbar-item-icon" v-show="isActive"><slot name="icon-active"></slot></span>
     <span class="m-tabbar-item-text"><slot></slot></span>
@@ -7,11 +7,27 @@
 </template>
 <script>
 export default{
-  props: ['id'],
+  props: {
+    id: {
+      type: String
+    },
+    isRouter: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     isActive () {
       if (this.$parent.value === this.id) {
         return true
+      }
+    }
+  },
+  methods: {
+    goToRouter () {
+      this.$parent.$emit('input', this.id)
+      if (this.isRouter) {
+        this.$router.push(this.id)
       }
     }
   }
