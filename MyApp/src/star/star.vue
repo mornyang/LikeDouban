@@ -1,64 +1,64 @@
 <template>
   <div class="star" :class="starType">
-    <span v-if="score || needNullStar" v-for="item in itemClasses" class="star-item" :class="item"></span>
+    <span v-if="score || needNullStar" v-for="item in itemClasses" :key="item.id" class="star-item" :class="item"></span>
     <span v-if="!score" class="no-score" :class="{'block':needNullStar}">暂无评分</span>
     <span v-if="showScore && score" class="show-score">{{normalizeScore}}</span>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const LENGTH = 5;
-  const CLS_ON = 'on';
-  const CLS_HALF = 'half';
-  const CLS_OFF = 'off';
-  export default {
-    props: {
-      size: {
-        type: Number,
-        default: 24
-      },
-      score: {
-        type: Number,
-        default: 0
-      },
-      showScore: {
-        type: Boolean,
-        default: false
-      },
-      needNullStar: {
-        type: Boolean,
-        default: false
-      }
+const LENGTH = 5
+const CLS_ON = 'on'
+const CLS_HALF = 'half'
+const CLS_OFF = 'off'
+export default {
+  props: {
+    size: {
+      type: Number,
+      default: 24
     },
-    computed: {
-      normalizeScore() { // 数位补零
-        let len = this.score.toString().length;
-        if (len < 2) {
-          return `${this.score}.0`;
-        }
-        return this.score;
-      },
-      starType() {
-        return 'star-' + this.size;
-      },
-      itemClasses() {
-        let result = [];
-        let score = Math.floor(this.score) / 2;
-        let hasDecimal = score % 1 !== 0;
-        let integer = Math.floor(score);
-        for (let i = 0; i < integer; i++) {
-          result.push(CLS_ON);
-        }
-        if (hasDecimal) {
-          result.push(CLS_HALF);
-        }
-        while (result.length < LENGTH) {
-          result.push(CLS_OFF);
-        }
-        return result;
-      }
+    score: {
+      type: Number,
+      default: 0
+    },
+    showScore: {
+      type: Boolean,
+      default: false
+    },
+    needNullStar: {
+      type: Boolean,
+      default: false
     }
-  };
+  },
+  computed: {
+    normalizeScore () { // 数位补零
+      let len = this.score.toString().length
+      if (len < 2) {
+        return `${this.score}.0`
+      }
+      return this.score
+    },
+    starType () {
+      return 'star-' + this.size
+    },
+    itemClasses () {
+      let result = []
+      let score = Math.floor(this.score) / 2
+      let hasDecimal = score % 1 !== 0
+      let integer = Math.floor(score)
+      for (let i = 0; i < integer; i++) {
+        result.push(CLS_ON)
+      }
+      if (hasDecimal) {
+        result.push(CLS_HALF)
+      }
+      while (result.length < LENGTH) {
+        result.push(CLS_OFF)
+      }
+      return result
+    }
+  }
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

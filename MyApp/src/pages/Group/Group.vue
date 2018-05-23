@@ -9,7 +9,7 @@
         <span>电影/影人/标签</span>
       </div>
     </div>
-    <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches>
+    <switcher :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switcher>
     <div class="list-wrapper">
       <scroll v-show="currentIndex === 0"
               class="list-scroll"
@@ -50,14 +50,14 @@
 import Scroll from '../../components/Scroll'
 import MovieList from '../../components/MovieList'
 import Switcher from '../../components/Switcher'
-import LoadMore from '../../components/LoadMore'
-import { getMovie, getComingMovie } from '../../api/movie-show';
-import { createMovieList } from '../../js/movieList';
-import { mapMutations } from 'vuex';
-const SEARCH_MORE = 10; // 每次请求数据的长度
-const TITLE_HEIGHT = 30; // 日期栏高度
+import Loadmore from '../../components/Loadmore'
+import { getMovie, getComingMovie } from '../../api/movie-show'
+import { createMovieList } from '../../js/movieList'
+import { mapMutations } from 'vuex'
+const SEARCH_MORE = 10 // 每次请求数据的长度
+const TITLE_HEIGHT = 30 // 日期栏高度
 export default {
-  data() {
+  data () {
     return {
       currentIndex: 0,
       switches: [
@@ -77,115 +77,115 @@ export default {
       hotMovieIndex: 0,
       comingMovieIndex: 0,
       scrollIndex: 0
-    };
+    }
   },
-  created() {
-    console.log('getMovies....');
-    this._getMovie();
-    this.probeType = 3; // 需要实时派发事件
-    this.listenScroll = true; // 需要监听事件
-    this.listHeight = []; // 各个滚动区域高度
-    this.scrollMap = []; // 滚动区分组
+  created () {
+    console.log('getMovies....')
+    this._getMovie()
+    this.probeType = 3 // 需要实时派发事件
+    this.listenScroll = true // 需要监听事件
+    this.listHeight = [] // 各个滚动区域高度
+    this.scrollMap = [] // 滚动区分组
   },
   computed: {
-    fixedTitle() {
+    fixedTitle () {
       if (this.scrollY > 0) {
-        return '';
+        return ''
       }
-      return this.scrollMap[this.scrollIndex] ? this.scrollMap[this.scrollIndex] : '';
+      return this.scrollMap[this.scrollIndex] ? this.scrollMap[this.scrollIndex] : ''
     }
   },
   methods: {
-    goSearch() { // 转入搜索页
+    goSearch () { // 转入搜索页
       this.$router.push({
         path: '/search'
-      });
+      })
     },
-    selectMovie(movie) { // 转入电影详情
-      this.setMovie(movie);
+    selectMovie (movie) { // 转入电影详情
+      this.setMovie(movie)
       this.$router.push({
         path: `/movie/${movie.id}`
-      });
+      })
     },
-    switchItem(index) { // 切换tab栏
-      this.currentIndex = index;
+    switchItem (index) { // 切换tab栏
+      this.currentIndex = index
       if (index === 1) { // 重新计算各个区间高度
-        this.$refs.list.recalculate();
+        this.$refs.list.recalculate()
       }
       // 第一次切换到即将上映选项卡后开始请求即将上映电影的数据
       if (index === 1 && !this.comingMovies.length) {
         getComingMovie(this.comingMovieIndex, SEARCH_MORE).then((res) => {
-          this.comingMovies = createMovieList(res.subjects); // 格式化数据，创建包含电影类的数组
-          this._checkMore(res); // 检查是否还存在更多数据
-        });
+          this.comingMovies = createMovieList(res.subjects) // 格式化数据，创建包含电影类的数组
+          this._checkMore(res) // 检查是否还存在更多数据
+        })
       }
       if (index === 1) { // 重新载入之前的滚动位置
-        this.$refs.comingMovies.scrollTo(0, this.scrollY);
+        this.$refs.comingMovies.scrollTo(0, this.scrollY)
       }
       setTimeout(() => { // scroll组件计算高度，确保正确滚动
-        this.$refs.comingMovies.refresh();
-        this.$refs.hotMovies.refresh();
-      }, 20);
+        this.$refs.comingMovies.refresh()
+        this.$refs.hotMovies.refresh()
+      }, 20)
     },
-    loadMore() { // 加载更多数据
+    loadMore () { // 加载更多数据
       if (!this.loadingFlag) { // 上一次加载还未完成时候，忽略此次事件
-        return;
+        return
       }
-      this.loadingFlag = false; // 重置加载标志位
+      this.loadingFlag = false // 重置加载标志位
       if (this.currentIndex === 0) { // 加载更多上映信息
         if (!this.hasMoreHotMovies) { // 不存在更多电影
-          this.loadingFlag = true;
-          return;
+          this.loadingFlag = true
+          return
         }
-        this.hotMovieIndex += SEARCH_MORE;
+        this.hotMovieIndex += SEARCH_MORE
         getMovie(this.hotMovieIndex, SEARCH_MORE).then((res) => {
-          this.hotMovies = this.hotMovies.concat(createMovieList(res.subjects));
-          this._checkMore(res);
-          this.loadingFlag = true;
-        });
+          this.hotMovies = this.hotMovies.concat(createMovieList(res.subjects))
+          this._checkMore(res)
+          this.loadingFlag = true
+        })
       } else {
         if (!this.hasMoreComingMovies) {
-          this.loadingFlag = true;
-          return;
+          this.loadingFlag = true
+          return
         }
-        this.comingMovieIndex += SEARCH_MORE;
+        this.comingMovieIndex += SEARCH_MORE
         getComingMovie(this.comingMovieIndex, SEARCH_MORE).then((res) => {
-          this.comingMovies = this.comingMovies.concat(createMovieList(res.subjects));
-          this._checkMore(res);
-          // console.log(this.comingMovies);
-          this.loadingFlag = true;
-        });
+          this.comingMovies = this.comingMovies.concat(createMovieList(res.subjects))
+          this._checkMore(res)
+          // console.log(this.comingMovies)
+          this.loadingFlag = true
+        })
       }
     },
-    scroll(pos) { // 获取滚动位置
-      // console.log(pos);
-      this.scrollY = pos.y;
+    scroll (pos) { // 获取滚动位置
+      // console.log(pos)
+      this.scrollY = pos.y
     },
-    getHeight(height) { // 保存子组件传入的高度列表
-      this.listHeight = height;
-//        console.log(height);
+    getHeight (height) { // 保存子组件传入的高度列表
+      this.listHeight = height
+      // console.log(height)
     },
-    getMap(map) { // 保存子组件传入的日期索引
-      this.scrollMap = map;
-//        console.log(this.scrollMap);
+    getMap (map) { // 保存子组件传入的日期索引
+      this.scrollMap = map
+      // console.log(this.scrollMap)
     },
-    _getMovie() { // 获取正在上映的电影
+    _getMovie () { // 获取正在上映的电影
       getMovie(this.hotMovieIndex, SEARCH_MORE).then((res) => {
-        this.$emit('hasLoad');
-        this.hotMovies = createMovieList(res.subjects); // 创建movie类封装数据
-        console.log(this.hotMovies);
-        this._checkMore(res); // 检查是否还存在更多数据
-      });
+        this.$emit('hasLoad')
+        this.hotMovies = createMovieList(res.subjects) // 创建movie类封装数据
+        console.log(this.hotMovies)
+        this._checkMore(res) // 检查是否还存在更多数据
+      })
     },
-    _checkMore(data) {
-      const movies = data.subjects;
+    _checkMore (data) {
+      const movies = data.subjects
       if (!movies.length || data.start + data.count > data.total) {
         if (this.currentIndex === 0) {
-          this.hasMoreHotMovies = false;
+          this.hasMoreHotMovies = false
         } else {
-          this.hasMoreComingMovies = false;
+          this.hasMoreComingMovies = false
         }
-        this.loadingFlag = true;
+        this.loadingFlag = true
       }
     },
     ...mapMutations({
@@ -193,53 +193,53 @@ export default {
     })
   },
   watch: {
-    scrollY(newY, oldY) {
+    scrollY (newY, oldY) {
       if (!newY) { // 如果在快速滚动时切换tab栏，滚动位置会读取错误，这里保留出错前正确的滚动位置
-        this.scrollY = oldY;
+        this.scrollY = oldY
       }
       if (this.listHeight.length === 0 || this.scrollMap.length === 0) { // 若还未获取到高度则返回
-        return;
+        return
       }
       // 当滚动到顶部下拉时，newY > 0
       if (newY > 0) {
-        this.scrollIndex = 0;
-        return;
+        this.scrollIndex = 0
+        return
       }
       // 在中间部分滚动
       for (let i = 0; i < this.listHeight.length - 1; i++) {
-        let height1 = this.listHeight[i];
-        let height2 = this.listHeight[i + 1];
+        let height1 = this.listHeight[i]
+        let height2 = this.listHeight[i + 1]
         if (-newY >= height1 && -newY < height2) {
-          this.scrollIndex = i;
-          this.diff = height2 + newY;
-          return;
+          this.scrollIndex = i
+          this.diff = height2 + newY
+          return
         }
       }
       // 滚动到底部，且newY大于最后一个元素的上限
-      this.scrollIndex = this.listHeight.length - 2;
+      this.scrollIndex = this.listHeight.length - 2
     },
-    diff(newval) {
-      let fixedTop = (newval > 0 && newval < TITLE_HEIGHT) ? newval - TITLE_HEIGHT : 0;
+    diff (newval) {
+      let fixedTop = (newval > 0 && newval < TITLE_HEIGHT) ? newval - TITLE_HEIGHT : 0
       if (this.fixedTop === fixedTop) {
-        return;
+        return
       }
-      this.fixedTop = fixedTop;
+      this.fixedTop = fixedTop
       this.$nextTick(() => {
-        this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`;
-      });
+        this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+      })
     }
   },
   components: {
-    Switches,
+    Switcher,
     MovieList,
     Scroll,
     Loadmore
   }
-};
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  import "../assets/stylus/variable.styl"
+  @import "../../assets/stylus/variable.styl"
   .movie-show
     height: 100%
     .go-search

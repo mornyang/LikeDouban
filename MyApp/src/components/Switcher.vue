@@ -1,7 +1,7 @@
 <template>
   <ul class="switches">
     <li class="switch-item"
-        v-for="(item,index) in switches"
+        v-for="(item,index) in switches" :key="item.index"
         :class="{'active':currentIndex === index, 'small-font':smallFont === true}"
         @click="switchItem(index)">
       <span>{{item.name}}</span>
@@ -14,7 +14,7 @@ export default {
   props: {
     switches: {
       type: Array,
-      default: []
+      default: () => []
     },
     currentIndex: {
       type: Number,

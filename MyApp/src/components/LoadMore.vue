@@ -14,23 +14,23 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default {
-    props: {
-      hasMore: {
-        type: Boolean,
-        default: true
-      },
-      fullScreen: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  props: {
+    hasMore: {
+      type: Boolean,
+      default: true
     },
-    data() {
-      return {
-        sky: 'sky'
-      };
+    fullScreen: {
+      type: Boolean,
+      default: false
     }
-  };
+  },
+  data () {
+    return {
+      sky: 'sky'
+    }
+  }
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
@@ -70,11 +70,9 @@
 
   @keyframes load
     0%
-      opacity: 1;
+      opacity: 1
       transform: scale(1.2)
     100%
-      opacity: .2;
+      opacity: .2
       transform: scale(.2)
-
-
 </style>
