@@ -1,5 +1,9 @@
 import axios from 'axios'
 import { commonParams } from './config'
+if (process.env.NODE_ENV !== 'development') {
+  axios.defaults.baseURL = 'https://api.douban.com'
+  console.log('show')
+}
 
 export function getMovie (start, count) {
   const url = '/v2/movie/in_theaters'

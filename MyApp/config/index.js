@@ -59,6 +59,15 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../../www'),
     assetsSubDirectory: '',
     assetsPublicPath: '',
+    proxyTable: {
+      '/v2': {
+        target: 'http://api.douban.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/v2': '/v2'
+        }
+      }
+    },
 
     /**
      * Source Maps

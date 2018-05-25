@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { commonParams } from './config';
+if (process.env.NODE_ENV !== 'development') {
+  axios.defaults.baseURL = 'https://api.douban.com'
+  console.log('detail')
+}
 
 export function getMovieDetail(id) {
   const url = `/v2/movie/subject/${id}`;

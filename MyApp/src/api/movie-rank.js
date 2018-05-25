@@ -1,5 +1,9 @@
 import axios from 'axios';
 import { commonParams } from './config';
+if (process.env.NODE_ENV !== 'development') {
+  axios.defaults.baseURL = 'https://api.douban.com'
+  console.log('rank')
+}
 
 export function top250Rank(start, count) { // top250
   const url = '/v2/movie/top250';

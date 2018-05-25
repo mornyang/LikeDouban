@@ -28,7 +28,12 @@ export default new Router({
     {
       path: '/group',
       name: 'Group',
-      component: Group
+      component: Group,
+      children: {
+        detail: {
+          path: '/movie-detail:'+movie.id
+        }
+      }
     },
     {
       path: '/mine',
