@@ -3,8 +3,9 @@ import Router from 'vue-router'
 import Index from '../pages/Index/Index'
 import Broadcast from '../pages/BroadCast/Broadcast'
 import AudioBook from '../pages/AudioBook/AudioBook'
-import Group from '../pages/Group/Group'
+import Movie from '../pages/Movie/Movie'
 import Mine from '../pages/Mine/Mine'
+import Detail from '../pages/Movie/Detail'
 
 Vue.use(Router)
 
@@ -26,14 +27,15 @@ export default new Router({
       component: AudioBook
     },
     {
-      path: '/group',
-      name: 'Group',
-      component: Group,
-      children: {
-        detail: {
-          path: '/movie-detail:'+movie.id
+      path: '/movie',
+      name: 'Movie',
+      component: Movie,
+      children:[
+        {
+          path:'/:movieId',
+          component: Detail
         }
-      }
+      ]
     },
     {
       path: '/mine',

@@ -1,6 +1,6 @@
 <template>
   <div class="movie-list">
-      <ul>
+    <ul>
       <li v-for="(movie,index) in movies" :key="movie.index" @click="selectItem(movie)" ref="group">
         <div class="date" v-if="needDate && !dateEqual(index)">{{movie.date}}</div>
         <div class="item">

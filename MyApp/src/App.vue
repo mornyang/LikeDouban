@@ -17,10 +17,10 @@
         <img src="./assets/img/ic_tab_status_active.png" alt="" slot="icon-active">
         广播
       </m-tabbar-item>
-      <m-tabbar-item id='Group' isRouter>
+      <m-tabbar-item id='Movie' isRouter>
         <img src="./assets/img/ic_tab_group_normal.png" alt="" slot="icon-normal">
         <img src="./assets/img/ic_tab_group_active.png" alt="" slot="icon-active">
-        小组
+        电影
       </m-tabbar-item>
        <m-tabbar-item id='Mine' isRouter>
         <img src="./assets/img/ic_tab_profile_normal.png" alt="" slot="icon-normal">
